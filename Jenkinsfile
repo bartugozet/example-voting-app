@@ -3,10 +3,10 @@ pipeline {
 
     environment {
         // Define your ECR registry URL
-        ECR_REGISTRY = 'your-ecr-registry-url'
-        AWS_ROLE_TO_ASSUME = 'arn:aws:iam::account-id:role/your-jenkins-role'
-        AWS_REGION = 'your-aws-region'
-        AWS_CREDENTIALS_ID = 'your-aws-credentials-id'
+        ECR_REGISTRY = '130575395405.dkr.ecr.us-east-1.amazonaws.com'
+        AWS_ROLE_TO_ASSUME = 'arn:aws:iam::130575395405:role/talent_role'
+        AWS_REGION = 'us-east-1'
+        AWS_CREDENTIALS_ID = 'bartu-ecr'
     }
 
     stages {
