@@ -42,7 +42,7 @@ pipeline {
                     sh '''#!/busybox/sh
 
                         # Running Kaniko build
-                        /kaniko/executor --context `pwd`/vote --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
+                        /kaniko/executor --context `pwd`/vote --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination local/vote:latest --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
                     '''
                 }
               }
@@ -58,7 +58,9 @@ pipeline {
           // place other parameters here
         //)
         //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
-        snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
+
+        snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker local/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
+
         //def variable = sh(
           //             script: 'snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile', returnStatus: true)
         //snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile
