@@ -7,28 +7,33 @@ pipeline {
         AWS_ROLE_TO_ASSUME = 'arn:aws:iam::130575395405:role/talent_role'
         AWS_REGION = 'us-east-1'
         AWS_CREDENTIALS_ID = 'bartu-ecr'
+	tools {
+	  'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker'
+	}
     }
 
     stages {
         stage('Build and Push Vote Image') {
             steps {
                 script {
-                    // Assume the IAM role
-                    withAWS(region: AWS_REGION, credentials: AWS_CREDENTIALS_ID, roleAccount: 'account-id') {
-                        // Move to the vote directory
-                        dir('vote') {
-                            // Build Docker image
-                            sh 'docker build -t vote .'
+		    dockerWithTool('docker') {
+	                    // Assume the IAM role
+        	            withAWS(region: AWS_REGION, credentials: AWS_CREDENTIALS_ID, roleAccount: 'account-id') {
+                	        // Move to the vote directory
+                        	dir('vote') {
+	                            // Build Docker image
+        	                    sh 'docker build -t vote .'
 
-                            // Tag the Docker image for ECR
-                            docker.withRegistry('', "ecr:${AWS_REGION}") {
-                                sh "docker tag vote $ECR_REGISTRY/vote:latest"
-                            }
+                	            // Tag the Docker image for ECR
+                        	    docker.withRegistry('', "ecr:${AWS_REGION}") {
+                                	sh "docker tag vote $ECR_REGISTRY/vote:latest"
+                            	}
 
-                            // Push the Docker image to ECR
-                            docker.withRegistry('', "ecr:${AWS_REGION}") {
-                                sh "docker push $ECR_REGISTRY/vote:latest"
-                            }
+                            	// Push the Docker image to ECR
+                            	docker.withRegistry('', "ecr:${AWS_REGION}") {
+                                	sh "docker push $ECR_REGISTRY/vote:latest"
+                            	}
+			    }
                         }
                     }
                 }
