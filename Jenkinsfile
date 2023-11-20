@@ -38,13 +38,19 @@ pipeline {
      }
      steps {
        container(name: 'kaniko', shell: '/busybox/sh') {
-
-
          sh '''#!/busybox/sh
-           /kaniko/executor --context `pwd` --dockerfile worker/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/worker:latest
-         '''
-       }
-     }
+                        # Install the Amazon ECR Credential Helper
+                        wget -O /kaniko/acr-cred-helper https://amazon-ecr-credential-helper-releases.s3.us-west-2.amazonaws.com/0.5.0/linux-amd64/docker-credential-ecr-login
+                        chmod +x /kaniko/acr-cred-helper
+
+                        # Configure Docker to use the ECR Credential Helper
+                        echo '{"credsStore": "ecr-login"}' > /kaniko/.docker/config.json
+
+                        # Running Kaniko build
+                        /kaniko/executor --context `pwd` --dockerfile worker/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/worker:latest
+                    '''
+                }
+            }
    }
  }
 }
