@@ -32,18 +32,6 @@ pipeline {
    }
  }
  stages {
-   stage('Snyk scan') {
-     steps {
-        echo 'Testing...'
-        //snykSecurity(
-         // snykInstallation: 'snyk',
-         // snykTokenId: 'snyk-token',
-          // place other parameters here
-        //)
-        //snykSecurity additionalArguments: '--all-projects', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
-        snykSecurity targetFile: '/home/jenkins/workspace/demo-pipeline/result/package.json', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
-     }
-   }
    stage('Build DockerImage with Kaniko') {
      environment {
        PATH = "/busybox:/kaniko:$PATH"
@@ -58,6 +46,26 @@ pipeline {
                     '''
                 }
               }
+     }
+   }
+   stage('Snyk scan') {
+     steps {
+      script{
+        echo 'Testing...'
+        //snykSecurity(
+         // snykInstallation: 'snyk',
+         // snykTokenId: 'snyk-token',
+          // place other parameters here
+        //)
+        //snykSecurity additionalArguments: '--all-projects', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+        snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+        def variable = sh(
+                       script: 'snyck container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest', returnStatus: true)
+        echo "error code = ${variable}"
+        if (variable != 0) {
+           echo " Alert for vulnerability found"
+        }
+       }
      }
    }
  }
