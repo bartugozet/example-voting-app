@@ -24,9 +24,9 @@ pipeline {
                 script {
                     // Assume the IAM role
                     sh "aws sts assume-role --role-arn $AWS_ROLE_TO_ASSUME --role-session-name JenkinsSession --output json > assumed-role.json"
-                    sh "aws configure set aws_access_key_id $$(jq -r .Credentials.AccessKeyId assumed-role.json)"
-                    sh "aws configure set aws_secret_access_key $$(jq -r .Credentials.SecretAccessKey assumed-role.json)"
-                    sh "aws configure set aws_session_token $$(jq -r .Credentials.SessionToken assumed-role.json)"
+                    sh "aws configure set aws_access_key_id \$(jq -r .Credentials.AccessKeyId assumed-role.json)"
+                    sh "aws configure set aws_secret_access_key \$(jq -r .Credentials.SecretAccessKey assumed-role.json)"
+                    sh "aws configure set aws_session_token \$(jq -r .Credentials.SessionToken assumed-role.json)"
 
                     // Move to the vote directory
                     dir('vote') {
