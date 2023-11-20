@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent kubernetes
     environment {
         // Define your ECR registry URL
         ECR_REGISTRY = '130575395405.dkr.ecr.us-east-1.amazonaws.com'
@@ -69,3 +69,7 @@ pipeline {
                         }
                     }
                 }
+	    }
+        }
+    }
+}
