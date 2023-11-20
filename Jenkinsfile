@@ -42,7 +42,7 @@ pipeline {
                     sh '''#!/busybox/sh
 
                         # Running Kaniko build
-                        /kaniko/executor --context `pwd` --dockerfile worker/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/worker:latest
+                        /kaniko/executor --context `pwd` --dockerfile vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
                     '''
                 }
               }
