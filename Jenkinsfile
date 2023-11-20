@@ -42,7 +42,7 @@ pipeline {
                     sh '''#!/busybox/sh
 
                         # Running Kaniko build
-                        /kaniko/executor --context `pwd`/vote --no-push --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination local/vote:latest --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
+                        /kaniko/executor --context `pwd`/vote --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
                     '''
                 }
               }
@@ -50,7 +50,8 @@ pipeline {
    }
    stage('Snyk scan') {
      steps {
-      script{
+      withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
+      //script{
         echo 'Testing...'
         //snykSecurity(
          // snykInstallation: 'snyk',
@@ -68,7 +69,8 @@ pipeline {
         //if (variable != 0) {
         //   echo " Alert for vulnerability found"
         //}
-       }
+       //}
+      }
      }
    }
  }
