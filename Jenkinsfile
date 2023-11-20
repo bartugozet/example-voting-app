@@ -56,7 +56,9 @@ spec:
                         // Move to the vote directory
                         dir('vote') {
                             // Build Docker image
-                            sh 'docker build -t vote .'
+                            sh """
+				docker build -t vote .
+			    """
 
                             // Tag the Docker image for ECR
                             docker.withRegistry('', "ecr:${AWS_REGION}") {
