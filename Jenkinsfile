@@ -1,45 +1,38 @@
 pipeline {
     agent any
-
     environment {
         // Define your ECR registry URL
         ECR_REGISTRY = '130575395405.dkr.ecr.us-east-1.amazonaws.com'
         AWS_ROLE_TO_ASSUME = 'arn:aws:iam::130575395405:role/talent_role'
         AWS_REGION = 'us-east-1'
         AWS_CREDENTIALS_ID = 'bartu-ecr'
-	tools {
-	  'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker'
-	}
     }
 
     stages {
         stage('Build and Push Vote Image') {
             steps {
                 script {
-		    dockerWithTool('docker') {
-	                    // Assume the IAM role
-        	            withAWS(region: AWS_REGION, credentials: AWS_CREDENTIALS_ID, roleAccount: 'account-id') {
-                	        // Move to the vote directory
-                        	dir('vote') {
-	                            // Build Docker image
-        	                    sh 'docker build -t vote .'
+                    // Assume the IAM role
+                    withAWS(region: AWS_REGION, credentials: AWS_CREDENTIALS_ID, roleAccount: 'account-id') {
+                        // Move to the vote directory
+                        dir('vote') {
+                            // Build Docker image
+                            sh 'docker build -t vote .'
 
-                	            // Tag the Docker image for ECR
-                        	    docker.withRegistry('', "ecr:${AWS_REGION}") {
-                                	sh "docker tag vote $ECR_REGISTRY/vote:latest"
-                            	}
+                            // Tag the Docker image for ECR
+                            docker.withRegistry('', "ecr:${AWS_REGION}") {
+                                sh "docker tag vote $ECR_REGISTRY/vote:latest"
+                            }
 
-                            	// Push the Docker image to ECR
-                            	docker.withRegistry('', "ecr:${AWS_REGION}") {
-                                	sh "docker push $ECR_REGISTRY/vote:latest"
-                            	}
-			    }
+                            // Push the Docker image to ECR
+                            docker.withRegistry('', "ecr:${AWS_REGION}") {
+                                sh "docker push $ECR_REGISTRY/vote:latest"
+                            }
                         }
                     }
                 }
             }
         }
-
         stage('Build and Push Worker Image') {
             steps {
                 script {
@@ -59,7 +52,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build and Push Result Image') {
             steps {
                 script {
@@ -77,8 +69,3 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
