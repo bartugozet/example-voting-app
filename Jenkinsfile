@@ -1,11 +1,33 @@
 pipeline {
     agent {
-      kubernetes {
-        label 'jenkins-jenkins-agent'
-        defaultContainer 'kaniko'
-      }
+        kubernetes {
+            label 'jenkins-jenkins-agent'
+            defaultContainer 'kaniko'
+            yaml """
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                some-label: some-label-value
+            spec:
+              containers:
+              - name: kaniko
+                image: gcr.io/kaniko-project/executor:latest
+                command:
+                - cat
+                tty: true
+              - name: aws-cli
+                image: amazon/aws-cli:latest
+                command: ["/bin/sh", "-c"]
+                args:
+                - |
+                  while true; do
+                    sleep 86400
+                  done
+                tty: true
+            """
+        }
     }
-
     environment {
         ECR_REGISTRY = '130575395405.dkr.ecr.us-east-1.amazonaws.com'
         AWS_ROLE_TO_ASSUME = 'arn:aws:iam::130575395405:role/talent_role'
