@@ -40,7 +40,8 @@ pipeline {
          // snykTokenId: 'snyk-token',
           // place other parameters here
         //)
-        snykSecurity additionalArguments: '--all-projects', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+        //snykSecurity additionalArguments: '--all-projects', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+        snykSecurity additionalArguments: targetFile: '/home/jenkins/workspace/demo-pipeline/vote/app.py', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
      }
    }
    stage('Build DockerImage with Kaniko') {
