@@ -3,10 +3,10 @@ pipeline {
 
     environment {
         // Define your ECR registry URL
-        ECR_REGISTRY = '130575395405.dkr.ecr.us-east-1.amazonaws.com'
-        AWS_ROLE_TO_ASSUME = 'arn:aws:iam::130575395405:role/talent_role'
-        AWS_REGION = 'us-east-1'
-        AWS_CREDENTIALS_ID = 'bartu-ecr'
+        ECR_REGISTRY = 'your-ecr-registry-url'
+        AWS_ROLE_TO_ASSUME = 'arn:aws:iam::account-id:role/your-jenkins-role'
+        AWS_REGION = 'your-aws-region'
+        AWS_CREDENTIALS_ID = 'your-aws-credentials-id'
     }
 
     stages {
@@ -15,9 +15,6 @@ pipeline {
                 script {
                     // Assume the IAM role
                     withAWS(region: AWS_REGION, credentials: AWS_CREDENTIALS_ID, roleAccount: 'account-id') {
-                        // Clone the repository
-                        git 'https://github.com/bartugozet/example-voting-app.git'
-
                         // Move to the vote directory
                         dir('vote') {
                             // Build Docker image
@@ -43,8 +40,7 @@ pipeline {
                 script {
                     // Assume the IAM role
                     withAWS(region: AWS_REGION, credentials: AWS_CREDENTIALS_ID, roleAccount: 'account-id') {
-                        // Similar steps as above for the 'worker' repository
-                        git 'https://github.com/bartugozet/example-voting-app.git'
+                        // Move to the worker directory
                         dir('worker') {
                             sh 'docker build -t worker .'
                             docker.withRegistry('', "ecr:${AWS_REGION}") {
@@ -64,8 +60,7 @@ pipeline {
                 script {
                     // Assume the IAM role
                     withAWS(region: AWS_REGION, credentials: AWS_CREDENTIALS_ID, roleAccount: 'account-id') {
-                        // Similar steps as above for the 'result' repository
-                        git 'https://github.com/bartugozet/example-voting-app.git'
+                        // Move to the result directory
                         dir('result') {
                             sh 'docker build -t result .'
                             docker.withRegistry('', "ecr:${AWS_REGION}") {
