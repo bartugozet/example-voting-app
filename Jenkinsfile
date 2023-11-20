@@ -1,8 +1,9 @@
 pipeline {
     agent {
-    kubernetes {
-      label 'jenkins-jenkins-agent'
-      defaultContainer 'kaniko'
+      kubernetes {
+        label 'jenkins-jenkins-agent'
+        defaultContainer 'kaniko'
+      }
     }
 
     environment {
