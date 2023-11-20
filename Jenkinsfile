@@ -37,7 +37,7 @@ pipeline {
        PATH = "/busybox:/kaniko:$PATH"
      }
      steps {
-              withAWS(roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
+              withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
                         # Install the Amazon ECR Credential Helper
