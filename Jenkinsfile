@@ -32,6 +32,11 @@ pipeline {
    }
  }
  stages {
+   stage('Snyk scan') {
+     steps {
+       snykSecurity additionalArguments: '--all-projects', snykInstallation: 'snyk', snykTokenId: 'SNYK_TOKEN'
+     }
+   }
    stage('Build DockerImage with Kaniko') {
      environment {
        PATH = "/busybox:/kaniko:$PATH"
