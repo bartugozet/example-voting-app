@@ -35,11 +35,12 @@ pipeline {
    stage('Snyk scan') {
      steps {
         echo 'Testing...'
-        snykSecurity(
-          snykInstallation: 'snyk',
-          snykTokenId: 'snyk-token',
+        //snykSecurity(
+         // snykInstallation: 'snyk',
+         // snykTokenId: 'snyk-token',
           // place other parameters here
-        )
+        //)
+        snykSecurity additionalArguments: '--all-projects', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
      }
    }
    stage('Build DockerImage with Kaniko') {
