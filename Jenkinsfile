@@ -39,7 +39,7 @@ pipeline {
           snykInstallation: 'snyk',
           snykTokenId: 'snyk-token',
           // place other parameters here
-        
+        )
      }
    }
    stage('Build DockerImage with Kaniko') {
