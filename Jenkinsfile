@@ -69,8 +69,9 @@ pipeline {
                 snykSecurity(
                 snykInstallation: 'snyk',
                 snykTokenId: 'snyk-token',
-                additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
+                //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
                 )
+                script: 'snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest', returnStatus: true)
                 //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
 
                 //snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
