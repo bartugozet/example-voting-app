@@ -48,14 +48,23 @@ pipeline {
                         /kaniko/executor --context `pwd`/vote --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
 
                     '''   
+                                                 
+                }
+              }
+
+              withCredentials([[
+                  $class: 'AmazonWebServicesCredentialsBinding', 
+                  accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                  secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                  credentialsId: 'AWS_ACCOUNT'
+              ]]) {
                     echo 'Testing...'
                     snykSecurity(
                       snykInstallation: 'snyk',
                       snykTokenId: 'snyk-token',
-                      additionalArguments: '--container 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --username=${AWS_ACCESS_KEY_ID} --password=${AWS_SECRET_ACCESS_KEY}'
+                      additionalArguments: '--container 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --username=${accessKeyVariable} --password=${secretKeyVariable}'
                       //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
-                    )                                     
-                }
+                    )        
               }
               // script {
               //       // Ensure 'snyk' is in the PATH
