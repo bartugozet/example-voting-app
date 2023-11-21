@@ -45,7 +45,14 @@ pipeline {
                         # Running Kaniko build
                         /kaniko/executor --context `pwd`/vote --no-push --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
 
-                    '''                    
+                    '''   
+                    echo 'Testing...'
+                    snykSecurity(
+                      snykInstallation: 'snyk',
+                      snykTokenId: 'snyk-token',
+                      additionalArguments: '--container 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
+                      //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
+                    )                                     
                 }
               }
               // script {
@@ -63,30 +70,30 @@ pipeline {
               //         }
               //       }
               //   }
-              withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
-              //script{
-                echo 'Testing...'
-                snykSecurity(
-                snykInstallation: 'snyk',
-                snykTokenId: 'snyk-token',
-                additionalArguments: '--container 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
-                //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
-                )
-                //sh ''' snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest '''                
+              // withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
+              // //script{
+              //   echo 'Testing...'
+              //   snykSecurity(
+              //   snykInstallation: 'snyk',
+              //   snykTokenId: 'snyk-token',
+              //   additionalArguments: '--container 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
+              //   //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
+              //   )
+              //   //sh ''' snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest '''                
                 
-                //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+              //   //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
 
-                //snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
+              //   //snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
 
-                //def variable = sh(
-                  //             script: 'snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile', returnStatus: true)
-                //snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile
-                //echo "error code = ${variable}"
-                //if (variable != 0) {
-                //   echo " Alert for vulnerability found"
-                //}
-              //}
-              }
+              //   //def variable = sh(
+              //     //             script: 'snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile', returnStatus: true)
+              //   //snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile
+              //   //echo "error code = ${variable}"
+              //   //if (variable != 0) {
+              //   //   echo " Alert for vulnerability found"
+              //   //}
+              // //}
+              // }
      }
    }
   //  stage('Snyk scan') {
