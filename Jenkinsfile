@@ -45,7 +45,7 @@ pipeline {
                         /kaniko/executor --context `pwd`/vote --no-push --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
 
                     '''
-                    snykSecurity additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+                    snykSecurity additionalArguments: '--file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
                     
                 }
               }
