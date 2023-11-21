@@ -69,9 +69,10 @@ pipeline {
                 snykSecurity(
                 snykInstallation: 'snyk',
                 snykTokenId: 'snyk-token',
+                additionalArguments: '--container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
                 //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
                 )
-                sh ''' snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest '''                
+                //sh ''' snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest '''                
                 
                 //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
 
