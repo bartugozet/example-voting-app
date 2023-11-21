@@ -43,9 +43,10 @@ pipeline {
 
                         # Running Kaniko build
                         /kaniko/executor --context `pwd`/vote --no-push --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
-                        snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
 
                     '''
+                    snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
+                    
                 }
               }
               // withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
