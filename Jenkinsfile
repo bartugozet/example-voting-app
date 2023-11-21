@@ -35,6 +35,7 @@ pipeline {
    stage('Build DockerImage with Kaniko') {
      environment {
        PATH = "/busybox:/kaniko:$PATH"
+       SNYK_TOKEN = credentials('snyk-token')
      }
      steps {
               withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
@@ -44,11 +45,22 @@ pipeline {
                         # Running Kaniko build
                         /kaniko/executor --context `pwd`/vote --no-push --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
 
-                    '''
-                    snykSecurity additionalArguments: '--file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile --package-manager=pip', snykInstallation: 'snyk', snykTokenId: 'snyk-token'
-                    
+                    '''                    
                 }
               }
+              script {
+                    // Ensure 'snyk' is in the PATH
+                    def snykTool = tool 'snyk'
+                    withEnv(["PATH+SNYK=${snykTool}/bin", "SNYK_TOKEN=${SNYK_TOKEN}"]) {
+                        try {
+                            sh "snyk auth ${SNYK_TOKEN}"
+                            sh "snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest"
+                        } catch (Exception e) {
+                            echo "Snyk scan failed: ${e.message}"
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
               // withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
               // //script{
               //   echo 'Testing...'
