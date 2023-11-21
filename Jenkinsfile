@@ -46,32 +46,33 @@ pipeline {
                     '''
                 }
               }
+              withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
+              //script{
+                echo 'Testing...'
+                //snykSecurity(
+                // snykInstallation: 'snyk',
+                // snykTokenId: 'snyk-token',
+                  // place other parameters here
+                //)
+                //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+
+                snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
+
+                //def variable = sh(
+                  //             script: 'snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile', returnStatus: true)
+                //snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile
+                //echo "error code = ${variable}"
+                //if (variable != 0) {
+                //   echo " Alert for vulnerability found"
+                //}
+              //}
+              }
      }
    }
-   stage('Snyk scan') {
-     steps {
-      withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
-      //script{
-        echo 'Testing...'
-        //snykSecurity(
-         // snykInstallation: 'snyk',
-         // snykTokenId: 'snyk-token',
-          // place other parameters here
-        //)
-        //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
+  //  stage('Snyk scan') {
+  //    steps {
 
-        snykSecurity snykInstallation: 'snyk', snykTokenId: 'snyk-token', additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile'
-
-        //def variable = sh(
-          //             script: 'snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile', returnStatus: true)
-        //snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --file=/home/jenkins/workspace/demo-pipeline/vote/Dockerfile
-        //echo "error code = ${variable}"
-        //if (variable != 0) {
-        //   echo " Alert for vulnerability found"
-        //}
-       //}
-      }
-     }
-   }
+  //    }
+  //  }
  }
 }
