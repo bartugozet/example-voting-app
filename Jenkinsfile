@@ -36,6 +36,8 @@ pipeline {
      environment {
        PATH = "/busybox:/kaniko:$PATH"
        //SNYK_TOKEN = credentials('snyk-token')
+        AWS_ACCESS_KEY_ID     = credentials('aws_access_key_id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
      }
      steps {
               withAWS(credentials:'bartu-ecr', roleAccount:'130575395405', role:'arn:aws:iam::130575395405:role/talent_role') {
@@ -43,14 +45,14 @@ pipeline {
                     sh '''#!/busybox/sh
 
                         # Running Kaniko build
-                        /kaniko/executor --context `pwd`/vote --no-push --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
+                        /kaniko/executor --context `pwd`/vote --dockerfile `pwd`/vote/Dockerfile --verbosity debug --destination 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest
 
                     '''   
                     echo 'Testing...'
                     snykSecurity(
                       snykInstallation: 'snyk',
                       snykTokenId: 'snyk-token',
-                      additionalArguments: '--container 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
+                      additionalArguments: '--container 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest --username=${AWS_ACCESS_KEY_ID} --password=${AWS_SECRET_ACCESS_KEY}'
                       //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
                     )                                     
                 }
