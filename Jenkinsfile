@@ -71,8 +71,7 @@ pipeline {
                 snykTokenId: 'snyk-token',
                 //additionalArguments: '--docker 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest'
                 )
-                def variable = sh(
-                               script: 'snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest', returnStatus: true)                
+                sh ''' snyk container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest '''                
                 
                 //snykSecurity container test 130575395405.dkr.ecr.us-east-1.amazonaws.com/vote:latest, snykInstallation: 'snyk', snykTokenId: 'snyk-token'
 
